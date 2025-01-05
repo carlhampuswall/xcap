@@ -133,15 +133,12 @@ impl ImplMonitor {
         )
     }
 
-    pub fn screenshot(&self, x: i32, y: i32, width: i32, height: i32) -> XCapResult<RgbaImage> {
+    pub fn screenshot(&self, x: f64, y: f64, width: f64, height: f64) -> XCapResult<RgbaImage> {
         let rect = CGRect {
-            origin: CGPoint {
-                x: x as f64,
-                y: y as f64,
-            },
+            origin: CGPoint { x: x, y: y },
             size: CGSize {
-                width: width as f64,
-                height: height as f64,
+                width: width,
+                height: height,
             },
         };
 
