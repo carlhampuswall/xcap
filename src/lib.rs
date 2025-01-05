@@ -23,4 +23,4 @@ pub use window::Window;
 
 pub use video_recorder::VideoRecorder;
 
-pub use confirm::Confirm;
+pub use platform::capture;
