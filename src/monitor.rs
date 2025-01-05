@@ -79,6 +79,10 @@ impl Monitor {
         self.impl_monitor.capture_image()
     }
 
+    pub fn screenshot(&self, x: i32, y: i32, width: i32, height: i32) -> XCapResult<RgbaImage> {
+        self.impl_monitor.screenshot(x, y, width, height)
+    }
+
     pub fn video_recorder(&self) -> XCapResult<VideoRecorder> {
         let impl_video_recorder = self.impl_monitor.video_recorder()?;
 

@@ -1,6 +1,6 @@
 use core_graphics::display::{
     kCGNullWindowID, kCGWindowListOptionAll, CGDirectDisplayID, CGDisplay, CGDisplayMode, CGError,
-    CGPoint,
+    CGPoint, CGRect, CGSize,
 };
 use image::RgbaImage;
 
@@ -131,6 +131,21 @@ impl ImplMonitor {
             kCGWindowListOptionAll,
             kCGNullWindowID,
         )
+    }
+
+    pub fn screenshot(&self, x: i32, y: i32, width: i32, height: i32) -> XCapResult<RgbaImage> {
+        let rect = CGRect {
+            origin: CGPoint {
+                x: x as f64,
+                y: y as f64,
+            },
+            size: CGSize {
+                width: width as f64,
+                height: height as f64,
+            },
+        };
+
+        capture(rect, kCGWindowListOptionAll, kCGNullWindowID)
     }
 
     pub fn video_recorder(&self) -> XCapResult<ImplVideoRecorder> {
