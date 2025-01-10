@@ -3,7 +3,7 @@ use core_graphics::{
     geometry::CGRect,
     window::create_image,
 };
-use image::RgbaImage;
+use image::{RgbImage, RgbaImage};
 
 use crate::error::{XCapError, XCapResult};
 
@@ -34,4 +34,29 @@ pub fn capture(
 
     RgbaImage::from_raw(width as u32, height as u32, buffer)
         .ok_or_else(|| XCapError::new("RgbaImage::from_raw failed"))
+}
+
+pub fn capture_rgb(
+    cg_rect: CGRect,
+    list_option: CGWindowListOption,
+    window_id: CGWindowID,
+) -> XCapResult<RgbImage> {
+    let cg_image = create_image(cg_rect, list_option, window_id, kCGWindowImageDefault)
+        .ok_or_else(|| XCapError::new(format!("Capture failed {} {:?}", window_id, cg_rect)))?;
+
+    let width = cg_image.width();
+    let height = cg_image.height();
+    let bytes = Vec::from(cg_image.data().bytes());
+
+    let mut buffer = Vec::with_capacity(width * height * 3);
+    for row in bytes.chunks_exact(cg_image.bytes_per_row()) {
+        buffer.extend_from_slice(&row[..width * 4]);
+    }
+
+    for bgra in buffer.chunks_exact_mut(3) {
+        bgra.swap(0, 2);
+    }
+
+    RgbImage::from_raw(width as u32, height as u32, buffer)
+        .ok_or_else(|| XCapError::new("RgbImage::from_raw failed"))
 }
