@@ -2,11 +2,14 @@ use core_graphics::display::{
     kCGNullWindowID, kCGWindowListOptionAll, CGDirectDisplayID, CGDisplay, CGDisplayMode, CGError,
     CGPoint, CGRect, CGSize,
 };
-use image::RgbaImage;
+use image::{RgbImage, RgbaImage};
 
 use crate::error::{XCapError, XCapResult};
 
-use super::{capture::capture, impl_video_recorder::ImplVideoRecorder};
+use super::{
+    capture::{capture, capture_rgb},
+    impl_video_recorder::ImplVideoRecorder,
+};
 
 #[derive(Debug, Clone)]
 pub(crate) struct ImplMonitor {
@@ -127,6 +130,14 @@ fn get_cg_display_mode(cg_display: CGDisplay) -> XCapResult<CGDisplayMode> {
 impl ImplMonitor {
     pub fn capture_image(&self) -> XCapResult<RgbaImage> {
         capture(
+            self.cg_display.bounds(),
+            kCGWindowListOptionAll,
+            kCGNullWindowID,
+        )
+    }
+
+    pub fn capture_image_rgb(&self) -> XCapResult<RgbImage> {
+        capture_rgb(
             self.cg_display.bounds(),
             kCGWindowListOptionAll,
             kCGNullWindowID,

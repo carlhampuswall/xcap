@@ -1,4 +1,4 @@
-use image::RgbaImage;
+use image::{RgbImage, RgbaImage};
 
 use crate::{error::XCapResult, platform::impl_monitor::ImplMonitor, VideoRecorder};
 
@@ -77,6 +77,10 @@ impl Monitor {
     /// Capture image of the monitor
     pub fn capture_image(&self) -> XCapResult<RgbaImage> {
         self.impl_monitor.capture_image()
+    }
+
+    pub fn capture_image_rgb(&self) -> XCapResult<RgbImage> {
+        self.impl_monitor.capture_image_rgb()
     }
 
     pub fn screenshot(&self, x: f64, y: f64, width: f64, height: f64) -> XCapResult<RgbaImage> {
