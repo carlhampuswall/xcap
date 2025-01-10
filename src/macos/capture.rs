@@ -48,12 +48,14 @@ pub fn capture_rgb(
     let height = cg_image.height();
     let bytes = Vec::from(cg_image.data().bytes());
 
-    let mut buffer = Vec::with_capacity(width * height * 3);
+    // Adjust row bytes to handle platform-specific padding
+    let mut buffer = Vec::with_capacity(width * height * 4);
     for row in bytes.chunks_exact(cg_image.bytes_per_row()) {
         buffer.extend_from_slice(&row[..width * 4]);
     }
 
-    for bgra in buffer.chunks_exact_mut(3) {
+    // Convert BGRA to RGBA
+    for bgra in buffer.chunks_exact_mut(4) {
         bgra.swap(0, 2);
     }
 
